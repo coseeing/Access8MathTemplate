@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 
 import { textmath2laObj } from '@/lib/content-processor/math-process';
 import linkHandler from '@/lib/content-processor/link';
@@ -6,14 +6,10 @@ import { marked } from '@/lib/content-processor/markdown-process';
 import latex2mmlFactory from '@/lib/content-processor/tex2mml';
 import asciimath2mmlFactory from '@/lib/content-processor/am2mml';
 import mml2svg from '@/lib/content-processor/mml2svg';
-
-import exampleText from './example-text';
+import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
-  const [latextDelimiter] = useState('bracket');
-  const [display] = useState('inline');
-  const [raw] = useState(exampleText);
-  const [documentDisplay] = useState('markdown');
+  const { latextDelimiter, display, raw, documentDisplay } = useConfigContext();
 
   const markdownParser = useCallback(
     (data) => {

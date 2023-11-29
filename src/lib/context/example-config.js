@@ -1,4 +1,4 @@
-const text = `
+const raw = `
 112 年國中教育會考 數學科試題本
 第一部分：選擇題 (1 ~ 25 題)
 
@@ -237,4 +237,10 @@ const text = `
 
 `;
 
-export default text;
+export default {
+  raw,
+  latextDelimiter: 'bracket',
+  display: 'inline',
+  documentDisplay: 'markdown',
+  title: '112年國中教育會考數學科試題本',
+};
