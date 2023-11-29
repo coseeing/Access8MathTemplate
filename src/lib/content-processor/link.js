@@ -136,7 +136,4 @@ function linkHandler(htmlStr) {
   return temp.innerHTML;
 }
 
-module.exports = {
-  linkHandler,
-  openMediaModal,
-};
+export default linkHandler;
