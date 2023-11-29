@@ -1,4 +1,5 @@
-const raw = `
+export default {
+  raw: `
 112 年國中教育會考 數學科試題本
 第一部分：選擇題 (1 ~ 25 題)
 
@@ -235,10 +236,7 @@ const raw = `
 (1) 圖（十七）的正八邊形的一個內角度數為多少？
 (2) 已知有一個圓柱形花瓶其底面半徑為\\(8\\)公分，假設不考慮花瓶與環套厚度，判斷圖（十六）的環套是否能在不變形的前提下，套在此圓柱形花瓶側面外圍？
 
-`;
-
-export default {
-  raw,
+`,
   latextDelimiter: 'bracket',
   display: 'inline',
   documentDisplay: 'markdown',
