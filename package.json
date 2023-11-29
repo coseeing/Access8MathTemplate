@@ -1,8 +1,7 @@
 {
-  "name": "access-8-math-web-cra",
+  "name": "access-8-math-web-template",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://access8math.wendellatman.com",
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
@@ -28,7 +27,6 @@
     "test": "craco test",
     "eject": "craco eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "lint": "npx eslint"
   },
   "eslintConfig": {
