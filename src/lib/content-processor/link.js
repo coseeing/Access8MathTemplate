@@ -94,6 +94,7 @@ class YoutubeVideo {
   }
 }
 
+// FIXME: the oeration should not rely on window function
 function linkHandler(htmlStr) {
   const temp = document.createElement('div');
   temp.innerHTML = htmlStr;

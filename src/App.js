@@ -2,14 +2,29 @@ import React from 'react';
 
 import Content from '@/components/Content';
 import Helmet from '@/components/Helmet';
-import { CconfigContextProvider } from '@/lib/context/config';
+import ConfigContext, { CconfigContextProvider } from '@/lib/context/config';
 
 function App() {
   return (
     <CconfigContextProvider>
       <div id="app" className="theme">
-        <Helmet />
-        <Content />
+        <ConfigContext.Consumer>
+          {({ config, isLoading }) => {
+            if (config) {
+              return (
+                <>
+                  <Helmet />
+                  <Content />
+                </>
+              );
+            }
+            if (isLoading) {
+              return <div>loading</div>;
+            }
+
+            return <div>Something wrong</div>;
+          }}
+        </ConfigContext.Consumer>
       </div>
     </CconfigContextProvider>
   );

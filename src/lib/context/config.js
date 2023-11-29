@@ -1,20 +1,33 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
+import useSWRImmutable from 'swr/immutable';
 
-import exampleConfig from './example-config';
+const fetcher = (url) => {
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-const STATUS = {
-  IDEL: 'IDEL',
-  FETCHING: 'FETCHING',
-  SUCCESSFUL: 'SUCCESSFUL',
+      return response.json();
+    })
+    .then((data) => {
+      console.log('config', data);
+      return data;
+    })
+    .catch((error) => {
+      console.log('An error occurred:', error);
+    });
 };
 
 const ConfigContext = createContext();
 
 export const CconfigContextProvider = ({ children }) => {
-  const [status] = useState(STATUS.IDEL);
-  const [config] = useState(exampleConfig);
+  const { data, error, isLoading } = useSWRImmutable(
+    '/content-config.json',
+    fetcher,
+  );
 
-  const value = { config, status };
+  const value = { config: data, error, isLoading };
 
   return (
     <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>
@@ -24,3 +37,5 @@ export const CconfigContextProvider = ({ children }) => {
 export const useConfigContext = () => {
   return useContext(ConfigContext);
 };
+
+export default ConfigContext;
