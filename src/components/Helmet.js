@@ -4,7 +4,9 @@ import { Helmet as HelmetComponent } from 'react-helmet';
 import { useConfigContext } from '@/lib/context/config';
 
 const Helmet = () => {
-  const { title } = useConfigContext();
+  const {
+    config: { title },
+  } = useConfigContext();
 
   return (
     <HelmetComponent>

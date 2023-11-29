@@ -9,7 +9,9 @@ import mml2svg from '@/lib/content-processor/mml2svg';
 import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
-  const { latextDelimiter, display, raw, documentDisplay } = useConfigContext();
+  const {
+    config: { latextDelimiter, display, raw, documentDisplay },
+  } = useConfigContext();
 
   const markdownParser = useCallback(
     (data) => {
