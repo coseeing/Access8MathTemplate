@@ -113,9 +113,9 @@ function linkHandler(htmlStr) {
       }
 
       element.setAttribute('href', 'javascript:void(0);');
-      element.setAttribute(
-        'onclick',
-        `window.openMediaModal({ title: '${text}', src: '${assetPath}', type: 'youtube' })`,
+      element.addEventListener(
+        'click',
+        openMediaModal({ title: text, src: assetPath, type: 'youtube' }),
       );
       return;
     }
@@ -125,10 +125,15 @@ function linkHandler(htmlStr) {
     const text = element.innerText || element.textContent;
     if (fileExtensionType) {
       element.setAttribute('href', 'javascript:void(0);');
-      element.setAttribute(
-        'onclick',
-        `window.openMediaModal({ title: '${text}', src: '${assetPath}', type: '${fileExtensionType}' })`,
+      element.addEventListener(
+        'click',
+        openMediaModal({
+          title: text,
+          src: assetPath,
+          type: fileExtensionType,
+        }),
       );
+
       return;
     }
     element.setAttribute('target', `blank`);
