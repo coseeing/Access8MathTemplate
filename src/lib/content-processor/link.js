@@ -43,6 +43,10 @@ function openMediaModal({ title, src, type }) {
   });
 }
 
+if (typeof window !== 'undefined') {
+  window.openMediaModal = openMediaModal;
+}
+
 const imageExtensions = ['jpg', 'jpeg', 'png'];
 const videoExtensions = [
   'mp4',
@@ -94,7 +98,6 @@ class YoutubeVideo {
   }
 }
 
-// FIXME: the oeration should not rely on window function
 function linkHandler(htmlStr) {
   const temp = document.createElement('div');
   temp.innerHTML = htmlStr;
@@ -112,30 +115,29 @@ function linkHandler(htmlStr) {
         assetPath = YoutubeVideo.toEmbeddableVideo(assetPath);
       }
 
-      element.setAttribute('href', 'javascript:void(0);');
-      element.addEventListener(
-        'click',
-        openMediaModal({ title: text, src: assetPath, type: 'youtube' }),
+      element.setAttribute('href', 'javascript:void(0)');
+      element.setAttribute(
+        'onclick',
+        `window.openMediaModal({ title: '${text}', src: '${assetPath}', type: 'youtube' })`,
       );
+
       return;
     }
 
     const fileExtension = assetPath.split('.').pop();
     const fileExtensionType = findExtensionType(fileExtension.toLowerCase());
     const text = element.innerText || element.textContent;
+
     if (fileExtensionType) {
-      element.setAttribute('href', 'javascript:void(0);');
-      element.addEventListener(
-        'click',
-        openMediaModal({
-          title: text,
-          src: assetPath,
-          type: fileExtensionType,
-        }),
+      element.setAttribute('href', 'javascript:void(0)');
+      element.setAttribute(
+        'onclick',
+        `window.openMediaModal({ title: '${text}', src: '${assetPath}', type: '${fileExtensionType}' })`,
       );
 
       return;
     }
+
     element.setAttribute('target', `blank`);
   });
 

@@ -5,7 +5,7 @@ import { useConfigContext } from '@/lib/context/config';
 
 const Helmet = () => {
   const {
-    config: { title },
+    data: { title },
   } = useConfigContext();
 
   return (

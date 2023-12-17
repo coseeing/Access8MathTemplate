@@ -10,7 +10,7 @@ import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
   const {
-    config: { latextDelimiter, display, raw, documentDisplay },
+    data: { latextDelimiter, display, raw, documentDisplay },
   } = useConfigContext();
 
   const markdownParser = useCallback(

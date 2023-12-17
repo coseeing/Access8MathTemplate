@@ -9,8 +9,8 @@ function App() {
     <CconfigContextProvider>
       <div id="app" className="theme">
         <ConfigContext.Consumer>
-          {({ config, isLoading }) => {
-            if (config) {
+          {({ data, isLoading }) => {
+            if (data) {
               return (
                 <>
                   <Helmet />
