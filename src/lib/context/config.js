@@ -11,7 +11,6 @@ const jsonFetcher = (url) => {
       return response.json();
     })
     .then((data) => {
-      console.log('data', data);
       return data;
     })
     .catch((error) => {
@@ -29,7 +28,6 @@ const fetcher = (url) => {
       return response.text();
     })
     .then((data) => {
-      console.log('data', data);
       return data;
     })
     .catch((error) => {
@@ -81,8 +79,6 @@ const useFetchConfig = () => {
 
 export const CconfigContextProvider = ({ children }) => {
   const value = useFetchConfig();
-
-  console.log('value', value);
 
   return (
     <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>

@@ -1,4 +1,7 @@
 import Swal from 'sweetalert2';
+import { useEffect } from 'react';
+
+const MODAL_LINK_CLASS_NAME = 'modal-link';
 
 function ariaHandler(e) {
   let x = e.getAttribute('aria-live');
@@ -8,7 +11,7 @@ function ariaHandler(e) {
   e.setAttribute('aria-live', x);
 }
 
-function openMediaModal({ title, src, type }) {
+export function openMediaModal({ title, src, type }) {
   let elementHtml;
   switch (type) {
     case 'youtube':
@@ -43,9 +46,35 @@ function openMediaModal({ title, src, type }) {
   });
 }
 
-if (typeof window !== 'undefined') {
-  window.openMediaModal = openMediaModal;
-}
+export const useBindModalLinkEffect = () => {
+  useEffect(() => {
+    const handleClick = (event) => {
+      const dataset = event.target.dataset;
+
+      console.log('dataset', dataset);
+      openMediaModal({
+        title: dataset.title,
+        src: dataset.src,
+        type: dataset.type,
+      });
+    };
+    const elements = document.querySelectorAll(`.${MODAL_LINK_CLASS_NAME}`);
+
+    // Bind a click event to each element
+    elements.forEach(function (element) {
+      element.addEventListener('click', handleClick);
+    });
+
+    return () => {
+      const elements = document.querySelectorAll(`.${MODAL_LINK_CLASS_NAME}`);
+
+      // Bind a click event to each element
+      elements.forEach(function (element) {
+        element.removeEventListener('click', handleClick);
+      });
+    };
+  }, []);
+};
 
 const imageExtensions = ['jpg', 'jpeg', 'png'];
 const videoExtensions = [
@@ -116,10 +145,10 @@ function linkHandler(htmlStr) {
       }
 
       element.setAttribute('href', 'javascript:void(0)');
-      element.setAttribute(
-        'onclick',
-        `window.openMediaModal({ title: '${text}', src: '${assetPath}', type: 'youtube' })`,
-      );
+      element.setAttribute('data-title', text);
+      element.setAttribute('data-src', assetPath);
+      element.setAttribute('data-type', 'youtube');
+      element.classList.add(MODAL_LINK_CLASS_NAME);
 
       return;
     }
@@ -130,10 +159,10 @@ function linkHandler(htmlStr) {
 
     if (fileExtensionType) {
       element.setAttribute('href', 'javascript:void(0)');
-      element.setAttribute(
-        'onclick',
-        `window.openMediaModal({ title: '${text}', src: '${assetPath}', type: '${fileExtensionType}' })`,
-      );
+      element.setAttribute('data-title', text);
+      element.setAttribute('data-src', assetPath);
+      element.setAttribute('data-type', fileExtensionType);
+      element.classList.add(MODAL_LINK_CLASS_NAME);
 
       return;
     }

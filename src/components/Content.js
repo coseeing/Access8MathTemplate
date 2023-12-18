@@ -1,7 +1,9 @@
 import React, { useMemo, useCallback } from 'react';
 
 import { textmath2laObj } from '@/lib/content-processor/math-process';
-import linkHandler from '@/lib/content-processor/link';
+import linkHandler, {
+  useBindModalLinkEffect,
+} from '@/lib/content-processor/link';
 import { marked } from '@/lib/content-processor/markdown-process';
 import latex2mmlFactory from '@/lib/content-processor/tex2mml';
 import asciimath2mmlFactory from '@/lib/content-processor/am2mml';
@@ -12,6 +14,8 @@ function Content() {
   const {
     data: { latextDelimiter, display, raw, documentDisplay },
   } = useConfigContext();
+
+  useBindModalLinkEffect();
 
   const markdownParser = useCallback(
     (data) => {
