@@ -42,13 +42,13 @@ const useFetchConfig = () => {
     data: config,
     error: configError,
     isLoading: isConfigLoading,
-  } = useSWRImmutable('/content-config.json', jsonFetcher);
+  } = useSWRImmutable('./content-config.json', jsonFetcher);
 
   const {
     data: sourceText,
     error: sourceError,
     isLoading: isSourceLoading,
-  } = useSWRImmutable('/source.txt', fetcher);
+  } = useSWRImmutable('./source.txt', fetcher);
 
   if (isConfigLoading || isSourceLoading) {
     return { data: null, error: null, isLoading: true };
