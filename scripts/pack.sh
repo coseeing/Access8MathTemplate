@@ -12,16 +12,19 @@ log() {
 folder_path="build"
 
 # remove the config file 
-file_to_remove="content-config.json"
+config_file_name="content-config.js"
+source_file_name="sourceText.js"
 
 zip_file_name="access8math-web-template.zip"
 
 log "Starting script..."
 
 # Remove the file
-log "Removing file: $folder_path/$file_to_remove"
+log "Removing file: $folder_path/$config_file_name"
+log "Removing file: $folder_path/$source_file_name"
 
-rm "$folder_path/$file_to_remove"
+rm "$folder_path/$config_file_name"
+rm "$folder_path/$source_file_name"
 
 # Zip the folder
 log "Zipping folder: $folder_path"
