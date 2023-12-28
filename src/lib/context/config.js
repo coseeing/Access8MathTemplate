@@ -1,79 +1,37 @@
 import React, { createContext, useContext } from 'react';
-import useSWRImmutable from 'swr/immutable';
-
-const jsonFetcher = (url) => {
-  return fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      return response.json();
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.log('An error occurred:', error);
-    });
-};
-
-const fetcher = (url) => {
-  return fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      return response.text();
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.log('An error occurred:', error);
-    });
-};
 
 const ConfigContext = createContext();
 
 const useFetchConfig = () => {
-  const {
-    data: config,
-    error: configError,
-    isLoading: isConfigLoading,
-  } = useSWRImmutable('./content-config.json', jsonFetcher);
+  const isServerSide = typeof window === 'undefined';
 
-  const {
-    data: sourceText,
-    error: sourceError,
-    isLoading: isSourceLoading,
-  } = useSWRImmutable('./source.txt', fetcher);
-
-  if (isConfigLoading || isSourceLoading) {
-    return { data: null, error: null, isLoading: true };
-  }
-
-  if (configError) {
-    return { data: null, error: configError, isLoading: false };
-  }
-
-  if (sourceError) {
-    return { data: null, error: sourceError, isLoading: false };
-  }
-
-  if (config && sourceText) {
+  if (isServerSide) {
     return {
-      data: { ...config, raw: sourceText },
-      error: null,
-      isLoading: false,
+      data: null,
+      error: new Error("It's on server side"),
     };
   }
 
+  if (!window.contentConfig) {
+    return {
+      data: null,
+      error: new Error('no contentConfig'),
+    };
+  }
+
+  if (!window.sourceText) {
+    return {
+      data: null,
+      error: new Error('no sourceText'),
+    };
+  }
+
+  const config = window.cotentConfig;
+  const raw = window.sourceText;
+
   return {
-    data: null,
-    error: new Error('unexpected config fetcher error'),
-    isLoading: false,
+    data: { ...config, raw },
+    error: null,
   };
 };
 

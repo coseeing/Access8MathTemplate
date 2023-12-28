@@ -9,7 +9,7 @@ function App() {
     <CconfigContextProvider>
       <div id="app" className="theme">
         <ConfigContext.Consumer>
-          {({ data, isLoading }) => {
+          {({ data }) => {
             if (data) {
               return (
                 <>
@@ -17,9 +17,6 @@ function App() {
                   <Content />
                 </>
               );
-            }
-            if (isLoading) {
-              return <div>loading</div>;
             }
 
             return <div>Something wrong</div>;
