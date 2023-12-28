@@ -1,6 +1,1 @@
-window.contentConfig = {
-  latextDelimiter: 'bracket',
-  display: 'inline',
-  documentDisplay: 'markdown',
-  title: '112年國中教育會考數學科試題本',
-};
+window.contentConfig = {"title":"輸出結果","latextDelimiter":"bracket","display":"block","documentDisplay":"markdown","sourceText":"## Question 1\n\n1. \\({{\\left( -3 \\right)}^{3}}\\)之值為何？\n(A) \\(-27\\)\n(B) \\(-9\\)\n(C) \\(9\\)\n(D) \\(27\\)\n"}

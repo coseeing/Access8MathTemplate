@@ -19,18 +19,10 @@ const useFetchConfig = () => {
     };
   }
 
-  if (!window.sourceText) {
-    return {
-      data: null,
-      error: new Error('no sourceText'),
-    };
-  }
-
-  const config = window.cotentConfig;
-  const raw = window.sourceText;
+  const config = window.contentConfig;
 
   return {
-    data: { ...config, raw },
+    data: config,
     error: null,
   };
 };

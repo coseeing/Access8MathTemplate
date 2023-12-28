@@ -12,7 +12,7 @@ import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
   const {
-    data: { latextDelimiter, display, raw, documentDisplay },
+    data: { latextDelimiter, display, sourceText, documentDisplay },
   } = useConfigContext();
 
   useBindModalLinkEffect();
@@ -53,7 +53,7 @@ function Content() {
   );
 
   const content = useMemo(() => {
-    return raw
+    return sourceText
       .replaceAll('\n\n', '\n')
       .split('\n')
       .map((line) => {
@@ -77,11 +77,11 @@ function Content() {
           return a + result;
         }, '');
       });
-  }, [asciiMathToMMLParser, latexToMMLParser, raw, textParser]);
+  }, [asciiMathToMMLParser, latexToMMLParser, sourceText, textParser]);
 
   const markdownHTML = useMemo(() => {
-    return linkHandler(markdownParser(raw));
-  }, [raw, markdownParser]);
+    return linkHandler(markdownParser(sourceText));
+  }, [sourceText, markdownParser]);
 
   if (documentDisplay === 'markdown') {
     return (
