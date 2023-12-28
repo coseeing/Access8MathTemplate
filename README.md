@@ -5,6 +5,9 @@
 - Node.js >= 18
 - NPM >= 9
 
+## Release
+Please tag the repository without a Release. One action will handle the Release work.
+
 ## Project setup
 
 ```
