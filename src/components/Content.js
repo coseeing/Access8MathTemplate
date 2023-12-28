@@ -12,7 +12,7 @@ import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
   const {
-    data: { latextDelimiter, display, sourceText, documentDisplay },
+    data: { latexDelimiter, display, sourceText, documentDisplay },
   } = useConfigContext();
 
   useBindModalLinkEffect();
@@ -20,22 +20,22 @@ function Content() {
   const markdownParser = useCallback(
     (data) => {
       return marked({
-        latex_delimiter: latextDelimiter,
+        latex_delimiter: latexDelimiter,
         asciimath_delimiter: 'graveaccent',
         display,
       })(data);
     },
-    [latextDelimiter, display],
+    [latexDelimiter, display],
   );
 
   const textParser = useCallback(
     (text) => {
       return textmath2laObj({
-        latex_delimiter: latextDelimiter,
+        latex_delimiter: latexDelimiter,
         asciimath_delimiter: 'graveaccent',
       })(text);
     },
-    [latextDelimiter],
+    [latexDelimiter],
   );
 
   const latexToMMLParser = useCallback(
