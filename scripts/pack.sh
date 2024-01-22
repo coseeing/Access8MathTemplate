@@ -26,6 +26,6 @@ rm "$folder_path/$config_file_name"
 # Zip the folder
 log "Zipping folder: $folder_path"
 
-zip -rq "$zip_file_name" "$folder_path"
+(cd $folder_path; zip -r "../$zip_file_name" *)
 
 log "Script execution completed."
