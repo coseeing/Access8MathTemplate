@@ -53,30 +53,27 @@ function Content() {
   );
 
   const content = useMemo(() => {
-    return sourceText
-      .replaceAll('\n\n', '\n')
-      .split('\n')
-      .map((line) => {
-        return textParser(line).reduce((a, b) => {
-          let result;
-          if (b.type === 'latex-content') {
-            result = `<span class="sr-only">${latexToMMLParser(
-              b.data,
-            )}</span><span aria-hidden="true">${mml2svg(
-              latexToMMLParser(b.data),
-            )}</span>`;
-          } else if (b.type === 'asciimath-content') {
-            result = `<span class="sr-only">${asciiMathToMMLParser(
-              b.data,
-            )}</span><span aria-hidden="true">${mml2svg(
-              asciiMathToMMLParser(b.data),
-            )}</span>`;
-          } else {
-            result = `<span>${b.data}</span>`;
-          }
-          return a + result;
-        }, '');
-      });
+    return sourceText.split('\n').map((line) => {
+      return textParser(line).reduce((a, b) => {
+        let result;
+        if (b.type === 'latex-content') {
+          result = `<div class="sr-only">${latexToMMLParser(
+            b.data,
+          )}</div><div aria-hidden="true">${mml2svg(
+            latexToMMLParser(b.data),
+          )}</div>`;
+        } else if (b.type === 'asciimath-content') {
+          result = `<div class="sr-only">${asciiMathToMMLParser(
+            b.data,
+          )}</div><div aria-hidden="true">${mml2svg(
+            asciiMathToMMLParser(b.data),
+          )}</div>`;
+        } else {
+          result = `${b.data}`;
+        }
+        return a + result;
+      }, '');
+    });
   }, [asciiMathToMMLParser, latexToMMLParser, sourceText, textParser]);
 
   const markdownHTML = useMemo(() => {
@@ -103,7 +100,6 @@ function Content() {
         return (
           <span key={index}>
             <span dangerouslySetInnerHTML={{ __html: line }} />
-            <br />
           </span>
         );
       })}
