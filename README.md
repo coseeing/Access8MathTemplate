@@ -11,7 +11,7 @@ Please tag the repository without a Release. One action will handle the Release 
 
 ## Package Release
 
-Tag "package-release" to trigger the pacakge release process.
+Manually trigger the github action "Publish package to GitHub Packages".
 
 ## Project setup
 

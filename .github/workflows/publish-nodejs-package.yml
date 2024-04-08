@@ -1,10 +1,5 @@
 name: Publish package to GitHub Packages
 
-# on:
-#   push:
-#     tags:
-#       - 'package-release'
-
 on: workflow_dispatch
 
 jobs:
