@@ -74,5 +74,8 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/coseeing/access8math-web-template/issues"
-  }
+  },
+  "files": [
+    "src/lib/shared/**/*"
+  ]
 }
