@@ -1,13 +1,11 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 
-import { textmath2laObj } from '@/lib/content-processor/math-process';
-import linkHandler, {
-  useBindModalLinkEffect,
-} from '@/lib/content-processor/link';
-import { marked } from '@/lib/content-processor/markdown-process';
-import latex2mmlFactory from '@/lib/content-processor/tex2mml';
-import asciimath2mmlFactory from '@/lib/content-processor/am2mml';
-import mml2svg from '@/lib/content-processor/mml2svg';
+import {
+  textProcessorFactory,
+  markedProcessorFactory,
+} from '@/lib/shared/index';
+
+import linkHandler, { useBindModalLinkEffect } from '@/lib/link';
 import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
@@ -17,68 +15,26 @@ function Content() {
 
   useBindModalLinkEffect();
 
-  const markdownParser = useCallback(
-    (data) => {
-      return marked({
-        latex_delimiter: latexDelimiter,
-        asciimath_delimiter: 'graveaccent',
-        display,
-      })(data);
-    },
-    [latexDelimiter, display],
-  );
-
-  const textParser = useCallback(
-    (text) => {
-      return textmath2laObj({
-        latex_delimiter: latexDelimiter,
-        asciimath_delimiter: 'graveaccent',
-      })(text);
-    },
-    [latexDelimiter],
-  );
-
-  const latexToMMLParser = useCallback(
-    (data) => {
-      return latex2mmlFactory({ display })(data);
-    },
-    [display],
-  );
-
-  const asciiMathToMMLParser = useCallback(
-    (data) => {
-      return asciimath2mmlFactory({ display })(data);
-    },
-    [display],
-  );
-
   const content = useMemo(() => {
-    return sourceText.split('\n').map((line) => {
-      return textParser(line).reduce((a, b) => {
-        let result;
-        if (b.type === 'latex-content') {
-          result = `<div class="sr-only">${latexToMMLParser(
-            b.data,
-          )}</div><div aria-hidden="true">${mml2svg(
-            latexToMMLParser(b.data),
-          )}</div>`;
-        } else if (b.type === 'asciimath-content') {
-          result = `<div class="sr-only">${asciiMathToMMLParser(
-            b.data,
-          )}</div><div aria-hidden="true">${mml2svg(
-            asciiMathToMMLParser(b.data),
-          )}</div>`;
-        } else {
-          result = `${b.data}`;
-        }
-        return a + result;
-      }, '');
+    const processor = textProcessorFactory({
+      latexDelimiter,
+      htmlMathDisplay: display,
+      asciimathDelimiter: 'graveaccent',
     });
-  }, [asciiMathToMMLParser, latexToMMLParser, sourceText, textParser]);
+    return processor(sourceText);
+  }, [sourceText, latexDelimiter, display]);
+
+  const markedFunc = useMemo(() => {
+    return markedProcessorFactory({
+      latexDelimiter: latexDelimiter,
+      asciimathDelimiter: 'graveaccent',
+      htmlMathDisplay: display,
+    });
+  }, [latexDelimiter, display]);
 
   const markdownHTML = useMemo(() => {
-    return linkHandler(markdownParser(sourceText));
-  }, [sourceText, markdownParser]);
+    return linkHandler(markedFunc(sourceText));
+  }, [sourceText, markedFunc]);
 
   if (documentDisplay === 'markdown') {
     return (

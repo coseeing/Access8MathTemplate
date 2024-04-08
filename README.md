@@ -5,8 +5,13 @@
 - Node.js >= 18
 - NPM >= 9
 
-## Release
+## Template Release
+
 Please tag the repository without a Release. One action will handle the Release work.
+
+## Package Release
+
+Tag "package-release" to trigger the pacakge release process.
 
 ## Project setup
 
