@@ -2,7 +2,6 @@
   "name": "@coseeing/access-8-math-web-lib",
   "version": "0.1.0",
   "homepage": "./",
-  "private": true,
   "dependencies": {
     "marked": "^5.1.0",
     "mathjax-full": "^3.2.2"
