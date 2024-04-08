@@ -11,7 +11,7 @@ function ariaHandler(e) {
   e.setAttribute('aria-live', x);
 }
 
-export function openMediaModal({ title, src, type }) {
+function openMediaModal({ title, src, type }) {
   let elementHtml;
   switch (type) {
     case 'youtube':
@@ -51,7 +51,6 @@ export const useBindModalLinkEffect = () => {
     const handleClick = (event) => {
       const dataset = event.target.dataset;
 
-      console.log('dataset', dataset);
       openMediaModal({
         title: dataset.title,
         src: dataset.src,
