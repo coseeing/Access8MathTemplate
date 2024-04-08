@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 
-import linkHandler, {
-  useBindModalLinkEffect,
-} from '@/lib/content-processor/link';
-import markedProcessorFactory from '@/lib/content-processor/markdown-process';
-import textProcessorFactory from '@/lib/content-processor/text-process';
+import {
+  textProcessorFactory,
+  markedProcessorFactory,
+} from '@/lib/shared/index';
+
+import linkHandler, { useBindModalLinkEffect } from '@/lib/link';
 import { useConfigContext } from '@/lib/context/config';
 
 function Content() {

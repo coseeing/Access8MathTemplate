@@ -65,10 +65,7 @@
     "sweetalert2": "^11.10.1"
   },
   "description": "## Prerequisites",
-  "main": "lib/index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "main": "src/lib/shared/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coseeing/access8math-web-template.git"
