@@ -1,4 +1,4 @@
-const marked = require('marked');
+const { Marked } = require('marked');
 
 const latex2mmlFactory = require('./tex-to-mml');
 const asciimath2mmlFactory = require('./ascii-math-to-mml');
@@ -78,6 +78,8 @@ const markedProcessorFactory = ({
     tokenizer(src) {
       const match = reTexMath.exec(src);
       if (match) {
+        log('tokenizer LaTeX_delimiter', LaTeX_delimiter);
+        log('tokenizer reTexMath', reTexMath);
         log('tokenizer match', match);
         log('tokenizer src', src);
         const math = match[3] || match[4];
@@ -122,6 +124,8 @@ const markedProcessorFactory = ({
       return text.replace(/\n/g, '<br />');
     },
   };
+
+  const marked = new Marked();
 
   marked.use({
     extensions: [math],
