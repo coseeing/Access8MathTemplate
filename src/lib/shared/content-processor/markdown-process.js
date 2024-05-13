@@ -1,4 +1,4 @@
-const marked = require('marked');
+const { Marked } = require('marked');
 
 const latex2mmlFactory = require('./tex-to-mml');
 const asciimath2mmlFactory = require('./ascii-math-to-mml');
@@ -109,6 +109,8 @@ const markedProcessorFactory = ({
       return text.replace(/\n/g, '<br />');
     },
   };
+
+  const marked = new Marked();
 
   marked.use({
     extensions: [math],
