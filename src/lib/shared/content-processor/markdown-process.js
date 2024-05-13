@@ -35,6 +35,10 @@ const AsciiMath_delimiter_dict = {
   },
 };
 
+const log = (...msg) => {
+  console.log('markdown-process', ...msg);
+};
+
 const markedProcessorFactory = ({
   latexDelimiter,
   asciimathDelimiter,
@@ -59,16 +63,23 @@ const markedProcessorFactory = ({
     `${latex_start_restring}|${asciimath_start_restring}`,
   );
 
+  log('start reTexMath_start', reTexMath_start);
   const math = {
     name: 'math',
     level: 'inline', // Is this a block-level or inline-level tokenizer?
     start(src) {
+      log('start src', src);
       const result = src.match(reTexMath_start);
+      if (result) {
+        log('start result', result);
+      }
       return result ? result.index : 0;
     }, // Hint to Marked.js to stop and check for a match
     tokenizer(src) {
       const match = reTexMath.exec(src);
       if (match) {
+        log('tokenizer match', match);
+        log('tokenizer src', src);
         const math = match[3] || match[4];
         const AsciiMath_delimiter_raw_start = AsciiMath_delimiter.start.replace(
           /\\\\\\/g,
@@ -91,6 +102,8 @@ const markedProcessorFactory = ({
       }
     },
     renderer(token) {
+      log('renderer token', token);
+      log('latexDelimiter', latexDelimiter);
       let mathMl;
       if (token.typed === 'asciimath') {
         mathMl = asciimath2mml(token.math);
