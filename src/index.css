@@ -45,3 +45,22 @@ th {
   padding: 0.25rem;
   border: 1px solid black;
 }
+
+body.light-theme {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark-theme {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.markdown {
+  color: inherit;
+}
+
+body.dark-theme .markdown {
+  background-color: #000000;
+  color: #ffffff;
+}

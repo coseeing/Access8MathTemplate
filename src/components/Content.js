@@ -10,7 +10,7 @@ import { useConfigContext } from '@/lib/context/config';
 
 function Content() {
   const {
-    data: { latexDelimiter, display, sourceText, documentDisplay },
+    data: { latexDelimiter, documentFormat, sourceText, documentDisplay },
   } = useConfigContext();
 
   useBindModalLinkEffect();
@@ -18,19 +18,19 @@ function Content() {
   const content = useMemo(() => {
     const processor = textProcessorFactory({
       latexDelimiter,
-      htmlMathDisplay: display,
+      htmlMathDisplay: documentFormat,
       asciimathDelimiter: 'graveaccent',
     });
     return processor(sourceText);
-  }, [sourceText, latexDelimiter, display]);
+  }, [sourceText, latexDelimiter, documentFormat]);
 
   const markedFunc = useMemo(() => {
     return markedProcessorFactory({
       latexDelimiter: latexDelimiter,
       asciimathDelimiter: 'graveaccent',
-      htmlMathDisplay: display,
+      htmlMathDisplay: documentFormat,
     });
-  }, [latexDelimiter, display]);
+  }, [latexDelimiter, documentFormat]);
 
   const markdownHTML = useMemo(() => {
     return linkHandler(markedFunc(sourceText));
