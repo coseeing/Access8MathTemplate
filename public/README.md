@@ -9,6 +9,8 @@ To use this app, kindly generate the configuration according to the specified ru
 | Field           | Description                                            | Type   | Enum Values                    |
 |-----------------|--------------------------------------------------------|--------|--------------------------------|
 | latexDelimiter  | Config for LaTeX delimiter.                            | Enum   | bracket, dollar                |
-| display         | Determines the display style for the LaTeX content.    | Enum   | block, inline                  |
+| documentFormat       | Determines the display style for the LaTeX content.    | Enum   | block, inline                  |
 | documentDisplay | Determines the display style for the page content.     | Enum   | markdown, text                 |
 | sourceText      | The source content as a string.                        | String |                                |
+| documentColor   | Determines the color scheme for the document.          | Enum   | light, dark                    |
+
