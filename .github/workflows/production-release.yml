@@ -1,9 +1,9 @@
-name: Production Release 
+name: Production Release
 
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
 env:
   version: ${{ github.ref_name }}
@@ -26,11 +26,10 @@ jobs:
         run: echo "$version" > "${build_folder}/version.txt"
 
       - name: Pack project
-        run: npm run zip 
+        run: npm run zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          prerelease: true
           files: access8math-web-template.zip
