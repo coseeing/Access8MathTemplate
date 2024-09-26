@@ -7,7 +7,7 @@
 
 ## Template Release
 
-Please tag the repository without a Release. One action will handle the Release work.
+Please create a Release with a new tag. One github workflow will handle the rest of work.
 
 ## Package Release
 
