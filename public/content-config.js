@@ -1,1 +1,1 @@
-window.contentConfig = {"title":"Access8Math","latexDelimiter":"bracket","display":"block","documentDisplay":"markdown","sourceText":"## Question 1\n\n1. \\({{\\left( -3 \\right)}^{3}}\\)之值為何？\n(A) \\(-27\\)\n(B) \\(-9\\)\n(C) \\(9\\)\n(D) \\(27\\)\n2. aewf"}
+window.contentConfig = {"title":"Access8Math","latexDelimiter":"bracket","documentFormat":"block","documentDisplay":"markdown","sourceText":"## Question 1\n\n1. \\({{\\left( -3 \\right)}^{3}}\\)之值為何？\n(A) \\(-27\\)\n(B) \\(-9\\)\n(C) \\(9\\)\n(D) \\(27\\)\n2. aewf",documentColor: "dark"}
