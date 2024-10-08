@@ -104,6 +104,39 @@ const markedProcessorFactory = ({
       )}</span>`;
     },
   };
+  const callout = {
+    name: 'callout',
+    level: 'block',
+    start(src) {
+      const pattern = /^\[!(NOTE|WARNING|TIP|IMPORTANT)\]</;
+      return pattern.test(src) ? 0 : undefined;
+    },
+    tokenizer(src) {
+      const rule = /^\[!(NOTE|WARNING|TIP|IMPORTANT)\]<([\s\S]*?)>/;
+      const match = rule.exec(src);
+      if (match) {
+        console.log('match', match);
+        const token = {
+          type: 'callout',
+          tag: match[1].toLowerCase(),
+          text: match[2].trim(),
+          raw: match[0],
+          tokens: [],
+        };
+        this.lexer.inline(token.text, token.tokens);
+        return token;
+      }
+    },
+    renderer(token) {
+      return (
+        `<div class="alert alert-${token.tag}">
+            <strong>${token.tag.toUpperCase()}</strong>
+            <p>${this.parser.parseInline(token.tokens)}</p>
+          </div>
+        `
+      );
+    },
+  };
   const renderer = {
     text(text) {
       return text.replace(/\n/g, '<br />');
@@ -113,7 +146,7 @@ const markedProcessorFactory = ({
   const marked = new Marked();
 
   marked.use({
-    extensions: [math],
+    extensions: [math, callout],
     renderer,
     mangle: false,
     headerIds: false,
