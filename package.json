@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "homepage": "./",
   "dependencies": {
-    "marked": "^5.1.0",
+    "marked": "^14.1.2",
     "mathjax-full": "^3.2.2"
   },
   "scripts": {
