@@ -105,8 +105,11 @@ const markedProcessorFactory = ({
     },
   };
   const renderer = {
-    text(text) {
-      return text.replace(/\n/g, '<br />');
+    text(token) {
+      if (token.tokens?.length > 0) {
+        return this.parser.parseInline(token.tokens);
+      }
+      return token.text.replace(/\n/g, '<br />');
     },
   };
 
@@ -115,8 +118,6 @@ const markedProcessorFactory = ({
   marked.use({
     extensions: [math],
     renderer,
-    mangle: false,
-    headerIds: false,
   });
 
   return (raw) => {
