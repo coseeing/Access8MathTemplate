@@ -3,6 +3,7 @@ const { Marked } = require('marked');
 const latex2mmlFactory = require('./tex-to-mml');
 const asciimath2mmlFactory = require('./ascii-math-to-mml');
 const mml2svg = require('./mml-to-svg');
+const markedAlert = require('./extensions/alert');
 
 const LaTeX_delimiter_dict = {
   latex: {
@@ -40,6 +41,7 @@ const markedProcessorFactory = ({
   asciimathDelimiter,
   htmlMathDisplay,
 }) => {
+  console.log('helloooooo22222');
   const asciimath2mml = asciimath2mmlFactory({ htmlMathDisplay });
   const latex2mml = latex2mmlFactory({ htmlMathDisplay });
 
@@ -119,6 +121,8 @@ const markedProcessorFactory = ({
     extensions: [math],
     renderer,
   });
+
+  marked.use(markedAlert());
 
   return (raw) => {
     return marked.parse(raw);
