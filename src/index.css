@@ -98,7 +98,16 @@ body.dark-theme .markdown {
   font-size: 1.1em;
 }
 
-@media (prefers-color-scheme: dark) {
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+body.dark-theme {
   :root {
     --color-note: #2f81f7;
     --color-tip: #3fb950;
@@ -107,15 +116,6 @@ body.dark-theme .markdown {
     --color-caution: #f85149;
     --color-important: #a371f7;
   }
-}
-
-:root {
-  --color-note: #0969da;
-  --color-tip: #1a7f37;
-  --color-warning: #9a6700;
-  --color-severe: #bc4c00;
-  --color-caution: #d1242f;
-  --color-important: #8250df;
 }
 
 .markdown-alert {
