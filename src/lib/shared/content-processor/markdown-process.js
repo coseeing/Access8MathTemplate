@@ -41,7 +41,6 @@ const markedProcessorFactory = ({
   asciimathDelimiter,
   htmlMathDisplay,
 }) => {
-  console.log('helloooooo22222');
   const asciimath2mml = asciimath2mmlFactory({ htmlMathDisplay });
   const latex2mml = latex2mmlFactory({ htmlMathDisplay });
 
