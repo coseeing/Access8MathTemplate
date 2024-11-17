@@ -112,9 +112,25 @@ function markedAlert(options = {}) {
         name: 'alert',
         level: 'block',
         renderer({ meta, tokens = [] }) {
-          let tmpl = `<div class="${meta.className} ${meta.className}-${meta.variant}">\n`
-          tmpl += `<p class="${meta.titleClassName}">`
-          tmpl += meta.icon
+          const colorMap = {
+            note: 'text-[#0969da]',
+            tip: 'text-[#1a7f37]',
+            warning: 'text-[#9a6700]',
+            caution: 'text-[#d1242f]',
+            important: 'text-[#8250df]'
+          }
+
+          const borderColorMap = {
+            note: 'border-[#0969da]',
+            tip: 'border-[#1a7f37]',
+            warning: 'border-[#9a6700]',
+            caution: 'border-[#d1242f]',
+            important: 'border-[#8250df]'
+          }
+
+          let tmpl = `<div class="px-4 py-2 mb-4 border-l-4 ${borderColorMap[meta.variant]}">\n`
+          tmpl += `<p class="flex items-center font-medium leading-none ${colorMap[meta.variant]}">`
+          tmpl += meta.icon.replace('class="octicon', 'class="octicon mr-2 inline-block align-text-bottom fill-current overflow-visible')
           tmpl += meta.title
           tmpl += '</p>\n'
           tmpl += this.parser.parse(tokens)
