@@ -37,10 +37,42 @@ const AsciiMath_delimiter_dict = {
   },
 };
 
+function processImagePaths(text, imageFiles) {
+  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+
+  const replaceImagePath = (fullMatch, alt, imagePath) => {
+    try {
+      if (!imageFiles) {
+        return processForHtmlRender(alt, imagePath);
+      }
+      return processForEditorPreview(fullMatch, alt, imagePath, imageFiles);
+    } catch (error) {
+      console.error('Error processing image:', error);
+      return fullMatch;
+    }
+  };
+
+  const processForHtmlRender = (alt, imagePath) => {
+    const imageName = imagePath.split('/').pop();
+    const imageExt = window.contentConfig.imageFileName?.[imageName] || imageName;
+    return `![${alt}](./images/${imageExt})`;
+  };
+
+  const processForEditorPreview = (fullMatch, alt, imagePath, imageFiles) => {
+    const imageFile = imageFiles[imagePath];
+    if (!imageFile) return fullMatch;
+    const blobUrl = URL.createObjectURL(imageFile);
+    return `![${alt}](${blobUrl})`;
+  };
+
+  return text.replace(imageRegex, replaceImagePath);
+}
+
 const markedProcessorFactory = ({
   latexDelimiter,
   asciimathDelimiter,
   htmlMathDisplay,
+  imageFiles,
 }) => {
   const asciimath2mml = asciimath2mmlFactory({ htmlMathDisplay });
   const latex2mml = latex2mmlFactory({ htmlMathDisplay });
@@ -128,7 +160,8 @@ const markedProcessorFactory = ({
   marked.use(markedInternalLink());
 
   return (raw) => {
-    return marked.parse(raw);
+    const processedText = processImagePaths(raw, imageFiles);
+    return marked.parse(processedText);
   };
 };
 
