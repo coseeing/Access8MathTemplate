@@ -65,43 +65,44 @@ function markedAlert(options = {}) {
         new RegExp(createSyntaxPattern(type)).test(token.text),
       );
 
-      if (matchedVariant) {
-        const {
-          type: variantType,
+      if (!matchedVariant) return;
+
+      const {
+        type: variantType,
+        icon,
+        title = ucfirst(variantType),
+        titleClassName = `${className}-title`,
+      } = matchedVariant;
+      const typeRegexp = new RegExp(createSyntaxPattern(variantType));
+
+      Object.assign(token, {
+        type: 'alert',
+        meta: {
+          className,
+          variant: variantType,
           icon,
-          title = ucfirst(variantType),
-          titleClassName = `${className}-title`,
-        } = matchedVariant;
-        const typeRegexp = new RegExp(createSyntaxPattern(variantType));
+          title,
+          titleClassName,
+        },
+      });
 
-        Object.assign(token, {
-          type: 'alert',
-          meta: {
-            className,
-            variant: variantType,
-            icon,
-            title,
-            titleClassName,
-          },
-        });
+      const firstLine = token.tokens?.[0];
+      const firstLineText = firstLine.raw?.replace(typeRegexp, '').trim();
 
-        const firstLine = token.tokens?.[0];
-        const firstLineText = firstLine.raw?.replace(typeRegexp, '').trim();
+      if (!firstLineText) {
+        token.tokens?.shift();
+        return;
+      }
 
-        if (firstLineText) {
-          const patternToken = firstLine.tokens[0];
+      const patternToken = firstLine.tokens[0];
 
-          Object.assign(patternToken, {
-            raw: patternToken.raw.replace(typeRegexp, ''),
-            text: patternToken.text.replace(typeRegexp, ''),
-          });
+      Object.assign(patternToken, {
+        raw: patternToken.raw.replace(typeRegexp, ''),
+        text: patternToken.text.replace(typeRegexp, ''),
+      });
 
-          if (firstLine.tokens[1]?.type === 'br') {
-            firstLine.tokens.splice(1, 1);
-          }
-        } else {
-          token.tokens?.shift();
-        }
+      if (firstLine.tokens[1]?.type === 'br') {
+        firstLine.tokens.splice(1, 1);
       }
     },
     extensions: [
