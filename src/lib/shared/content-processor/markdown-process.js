@@ -37,37 +37,6 @@ const AsciiMath_delimiter_dict = {
   },
 };
 
-function processImagePaths(text, imageFiles) {
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
-
-  const replaceImagePath = (fullMatch, alt, imagePath) => {
-    try {
-      if (!imageFiles) {
-        return processForHtmlRender(alt, imagePath);
-      }
-      return processForEditorPreview(fullMatch, alt, imagePath, imageFiles);
-    } catch (error) {
-      console.error('Error processing image:', error);
-      return fullMatch;
-    }
-  };
-
-  const processForHtmlRender = (alt, imagePath) => {
-    const imageName = imagePath.split('/').pop();
-    const imageExt = window.contentConfig.imageFileName?.[imageName] || imageName;
-    return `![${alt}](./images/${imageExt})`;
-  };
-
-  const processForEditorPreview = (fullMatch, alt, imagePath, imageFiles) => {
-    const imageFile = imageFiles[imagePath];
-    if (!imageFile) return fullMatch;
-    const blobUrl = URL.createObjectURL(imageFile);
-    return `![${alt}](${blobUrl})`;
-  };
-
-  return text.replace(imageRegex, replaceImagePath);
-}
-
 const markedProcessorFactory = ({
   latexDelimiter,
   asciimathDelimiter,
@@ -146,10 +115,30 @@ const markedProcessorFactory = ({
       }
       return token.text.replace(/\n/g, '<br />');
     },
+    
+    // Use Marked's built-in image renderer
+    image(token) {
+      try {
+        if (!imageFiles) {
+          // For HTML render
+          const imageName = token.href.split('/').pop();
+          const imageExt = window.contentConfig.imageFileName?.[imageName] || imageName;
+          return `<img src="./images/${imageExt}" alt="${token.text}">`;
+        }
+        // For editor preview
+        const imageFile = imageFiles[token.href];
+        if (!imageFile) return `<img src="${token.href}" alt="${token.text}">`;
+        const blobUrl = URL.createObjectURL(imageFile);
+        return `<img src="${blobUrl}" alt="${token.text}">`;
+      } catch (error) {
+        console.error('Error processing image:', error);
+        return `<img src="${token.href}" alt="${token.text}">`;
+      }
+    }
   };
 
   const marked = new Marked();
-
+  
   marked.use({
     extensions: [math],
     renderer,
@@ -159,10 +148,7 @@ const markedProcessorFactory = ({
 
   marked.use(markedInternalLink());
 
-  return (raw) => {
-    const processedText = processImagePaths(raw, imageFiles);
-    return marked.parse(processedText);
-  };
+  return (raw) => marked.parse(raw);
 };
 
 module.exports = markedProcessorFactory;
