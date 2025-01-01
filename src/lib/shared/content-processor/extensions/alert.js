@@ -53,6 +53,67 @@ function ucfirst(str) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
 }
 
+function findMatchingVariant(token, variants) {
+  return variants.find(({ type }) => 
+    new RegExp(createSyntaxPattern(type)).test(token.text)
+  );
+}
+
+function createAlertConfig(matchedVariant, className) {
+  const { type: variantType, icon } = matchedVariant;
+  return {
+    type: 'alert',
+    meta: {
+      className,
+      variant: variantType,
+      icon,
+      title: matchedVariant.title || ucfirst(variantType),
+      titleClassName: `${className}-title`,
+    }
+  };
+}
+
+function createCleanedPatternToken(token, regexp) {
+  return {
+    ...token,
+    raw: token.raw.replace(regexp, ''),
+    text: token.text.replace(regexp, '')
+  };
+}
+
+function createValidFirstTokens(token) {
+  return token && token.type !== 'br' ? [token] : [];
+}
+
+function createProcessedFirstLine(firstLine, typeRegexp) {
+  const [patternToken, firstToken, ...remainingTokens] = firstLine.tokens;
+  
+  return {
+    ...firstLine,
+    tokens: [
+      createCleanedPatternToken(patternToken, typeRegexp),
+      ...createValidFirstTokens(firstToken),
+      ...remainingTokens
+    ]
+  };
+}
+
+function processTokenContent(token, variantType) {
+  const typeRegexp = new RegExp(createSyntaxPattern(variantType));
+  const [firstLine, ...remainingLines] = token.tokens;
+
+  const cleanedFirstLine = firstLine.raw?.replace(typeRegexp, '').trim();
+  if (!cleanedFirstLine) {
+    token.tokens = remainingLines;
+    return;
+  }
+
+  token.tokens = [
+    createProcessedFirstLine(firstLine, typeRegexp),
+    ...remainingLines
+  ];
+}
+
 function markedAlert(options = {}) {
   const { className = 'markdown-alert', variants = [] } = options;
   const resolvedVariants = resolveVariants(variants);
@@ -61,49 +122,15 @@ function markedAlert(options = {}) {
     walkTokens(token) {
       if (token.type !== 'blockquote') return;
 
-      const matchedVariant = resolvedVariants.find(({ type }) =>
-        new RegExp(createSyntaxPattern(type)).test(token.text),
-      );
-
+      const matchedVariant = findMatchingVariant(token, resolvedVariants);
       if (!matchedVariant) return;
 
-      const {
-        type: variantType,
-        icon,
-        title = ucfirst(variantType),
-        titleClassName = `${className}-title`,
-      } = matchedVariant;
-      const typeRegexp = new RegExp(createSyntaxPattern(variantType));
+      const alertConfig = createAlertConfig(matchedVariant, className);
+      Object.assign(token, alertConfig);
 
-      Object.assign(token, {
-        type: 'alert',
-        meta: {
-          className,
-          variant: variantType,
-          icon,
-          title,
-          titleClassName,
-        },
-      });
+      if (!Array.isArray(token.tokens)) return;
 
-      const firstLine = token.tokens?.[0];
-      const firstLineText = firstLine.raw?.replace(typeRegexp, '').trim();
-
-      if (!firstLineText) {
-        token.tokens?.shift();
-        return;
-      }
-
-      const patternToken = firstLine.tokens[0];
-
-      Object.assign(patternToken, {
-        raw: patternToken.raw.replace(typeRegexp, ''),
-        text: patternToken.text.replace(typeRegexp, ''),
-      });
-
-      if (firstLine.tokens[1]?.type === 'br') {
-        firstLine.tokens.splice(1, 1);
-      }
+      processTokenContent(token, matchedVariant.type);
     },
     extensions: [
       {
