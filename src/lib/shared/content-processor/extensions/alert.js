@@ -1,7 +1,7 @@
 /**
  * The default configuration for alert variants.
  */
-const defaultAlertVariant = [
+const ALERT_VARIANTS = [
   {
     type: 'note',
     icon: '<svg class="octicon octicon-info" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>',
@@ -24,20 +24,7 @@ const defaultAlertVariant = [
   },
 ];
 
-/**
- * Resolves the variants configuration, combining the provided variants with
- * the default variants.
- */
-function resolveVariants(variants) {
-  if (!variants.length) return defaultAlertVariant;
-
-  return Object.values(
-    [...defaultAlertVariant, ...variants].reduce((map, item) => {
-      map[item.type] = item;
-      return map;
-    }, {}),
-  );
-}
+const CLASS_NAME = 'markdown-alert';
 
 /**
  * Returns regex pattern to match alert syntax.
@@ -53,22 +40,22 @@ function ucfirst(str) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-function findMatchingVariant(token, variants) {
-  return variants.find(({ type }) => 
+function findMatchingVariant(token) {
+  return ALERT_VARIANTS.find(({ type }) => 
     new RegExp(createSyntaxPattern(type)).test(token.text)
   );
 }
 
-function createAlertConfig(matchedVariant, className) {
+function createAlertConfig(matchedVariant) {
   const { type: variantType, icon } = matchedVariant;
   return {
     type: 'alert',
     meta: {
-      className,
+      className: CLASS_NAME,
       variant: variantType,
       icon,
       title: matchedVariant.title || ucfirst(variantType),
-      titleClassName: `${className}-title`,
+      titleClassName: `${CLASS_NAME}-title`,
     }
   };
 }
@@ -114,18 +101,16 @@ function processTokenContent(token, variantType) {
   ];
 }
 
-function markedAlert(options = {}) {
-  const { className = 'markdown-alert', variants = [] } = options;
-  const resolvedVariants = resolveVariants(variants);
+function markedAlert() {
 
   return {
     walkTokens(token) {
       if (token.type !== 'blockquote') return;
 
-      const matchedVariant = findMatchingVariant(token, resolvedVariants);
+      const matchedVariant = findMatchingVariant(token);
       if (!matchedVariant) return;
 
-      const alertConfig = createAlertConfig(matchedVariant, className);
+      const alertConfig = createAlertConfig(matchedVariant);
       Object.assign(token, alertConfig);
 
       if (!Array.isArray(token.tokens)) return;
