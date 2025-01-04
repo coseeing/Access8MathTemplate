@@ -4,6 +4,7 @@ const latex2mmlFactory = require('./tex-to-mml');
 const asciimath2mmlFactory = require('./ascii-math-to-mml');
 const mml2svg = require('./mml-to-svg');
 const markedAlert = require('./extensions/alert');
+const markedInternalLink = require('./extensions/internalLink');
 
 const LaTeX_delimiter_dict = {
   latex: {
@@ -122,6 +123,8 @@ const markedProcessorFactory = ({
   });
 
   marked.use(markedAlert());
+
+  marked.use(markedInternalLink());
 
   return (raw) => {
     return marked.parse(raw);
