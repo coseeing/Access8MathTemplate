@@ -77,7 +77,12 @@ function markedInternalLink() {
         name: 'internalLink-quote',
         level: 'block',
         renderer({ meta, tokens = [] }) {
-          return `<a href="/#${meta.id}-source" id="${meta.id}">${this.parser.parse(tokens)}</a>`;
+          return `
+          <div id="${meta.id}" role="region" aria-label="Supplementary Information">
+            ${this.parser.parse(tokens)}
+            <a href="/#${meta.id}-source">返回</a>
+          </div>
+        `;
         }
       },
     ],
