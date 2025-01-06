@@ -39,13 +39,13 @@ function Content() {
   if (documentDisplay === 'markdown') {
     return (
       <div className="markdown">
-        <span>
-          <span
+        <div data-remove-styles>
+          <div
             dangerouslySetInnerHTML={{
               __html: markdownHTML,
             }}
           />
-        </span>
+        </div>
       </div>
     );
   }
