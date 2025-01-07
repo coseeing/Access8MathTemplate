@@ -1,6 +1,9 @@
 const LINK_REGEXP = /^\[([^\]]+)\]<([^>]+)>/;
 const QUOTE_REGEXP = /^\[!LINK\]#([^\s]+)\n/;
 
+const LINK_COLOR = "text-[#58B2DC]"
+const QUOTE_BORDER_COLOR = "border-[#81C7D4]"
+
 function createValidFirstTokens(token) {
   return token && token.type !== 'br' ? [token] : [];
 }
@@ -70,7 +73,7 @@ function markedInternalLink() {
           }
         },
         renderer(token) {
-          return `<a href="/#${token.id}" id="${token.id}-source">${token.text}</a>`;
+          return `<a href="/#${token.id}" id="${token.id}-source" class="underline ${LINK_COLOR}">${token.text}</a>`;
         }
       },
       {
@@ -78,11 +81,16 @@ function markedInternalLink() {
         level: 'block',
         renderer({ meta, tokens = [] }) {
           return `
-          <div id="${meta.id}" role="region" aria-label="Supplementary Information">
-            ${this.parser.parse(tokens)}
-            <a href="/#${meta.id}-source">返回</a>
-          </div>
-        `;
+            <div
+              id="${meta.id}"
+              role="region"
+              aria-label="Supplementary Information"
+              class="px-4 mb-4 border-l-4 ${QUOTE_BORDER_COLOR}"
+            >
+              ${this.parser.parse(tokens)}
+              <a href="/#${meta.id}-source" class="underline ${LINK_COLOR}">返回</a>
+            </div>
+          `;
         }
       },
     ],
