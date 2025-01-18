@@ -126,6 +126,10 @@ class YoutubeVideo {
   }
 }
 
+function isInternalLink(path) {
+  return path.startsWith('#');
+}
+
 function linkHandler(htmlStr) {
   const temp = document.createElement('div');
   temp.innerHTML = htmlStr;
@@ -134,6 +138,10 @@ function linkHandler(htmlStr) {
     let assetPath = element.getAttribute('href');
     if (!assetPath) {
       element.setAttribute('target', `blank`);
+      return;
+    }
+
+    if (isInternalLink(assetPath)) {
       return;
     }
 
