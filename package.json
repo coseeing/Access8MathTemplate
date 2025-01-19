@@ -1,6 +1,6 @@
 {
   "name": "@coseeing/access8math-web-lib",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "./",
   "dependencies": {
     "marked": "^14.1.2",
