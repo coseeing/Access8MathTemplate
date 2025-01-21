@@ -17,7 +17,12 @@ function createProcessedFirstLine(firstLine) {
       {
         ...patternToken,
         raw: patternToken.raw.replace(QUOTE_REGEXP, ''),
-        text: patternToken.text.replace(QUOTE_REGEXP, '')
+        text: patternToken.text.replace(QUOTE_REGEXP, ''),
+        tokens: patternToken.tokens?.map?.(token => ({
+          ...token,
+          raw: token.raw.replace(QUOTE_REGEXP, ''),
+          text: token.text.replace(QUOTE_REGEXP, ''),
+        })),
       },
       ...createValidFirstTokens(firstToken),
       ...remainingTokens
