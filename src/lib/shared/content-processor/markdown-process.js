@@ -86,7 +86,8 @@ const markedProcessorFactory = ({
           type: 'math',
           typed,
           raw: match[0],
-          text: this.lexer.inlineTokens(match[1]),
+          text: match[1] || '',
+          tokens: this.lexer.inlineTokens(match[1]),
           math: math ? math.trim() : '',
           mathraw: match[2],
         };
@@ -100,7 +101,7 @@ const markedProcessorFactory = ({
         mathMl = latex2mml(token.math);
       }
       return `${this.parser.parseInline(
-        token.text,
+       token.tokens,
       )}<span class="sr-only">${mathMl}</span><span aria-hidden="true">${mml2svg(
         mathMl,
       )}</span>`;
