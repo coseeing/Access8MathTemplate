@@ -64,7 +64,12 @@ function createCleanedPatternToken(token, regexp) {
   return {
     ...token,
     raw: token.raw.replace(regexp, ''),
-    text: token.text.replace(regexp, '')
+    text: token.text.replace(regexp, ''),
+    tokens: token.tokens?.map?.(token => ({
+      ...token,
+      raw: token.raw.replace(regexp, ''),
+      text: token.text.replace(regexp, ''),
+    })),
   };
 }
 
@@ -80,7 +85,7 @@ function createProcessedFirstLine(firstLine, typeRegexp) {
     tokens: [
       createCleanedPatternToken(patternToken, typeRegexp),
       ...createValidFirstTokens(firstToken),
-      ...remainingTokens
+      ...remainingTokens,
     ]
   };
 }
