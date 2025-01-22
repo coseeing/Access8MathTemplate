@@ -65,11 +65,7 @@ function createCleanedPatternToken(token, regexp) {
     ...token,
     raw: token.raw.replace(regexp, ''),
     text: token.text.replace(regexp, ''),
-    tokens: token.tokens?.map?.(token => ({
-      ...token,
-      raw: token.raw.replace(regexp, ''),
-      text: token.text.replace(regexp, ''),
-    })),
+    tokens: token.tokens?.map?.(token => createCleanedPatternToken(token, regexp)),
   };
 }
 
