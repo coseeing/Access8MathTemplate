@@ -8,22 +8,22 @@ function createValidFirstTokens(token) {
   return token && token.type !== 'br' ? [token] : [];
 }
 
+function cleanTokens(token) {
+  return {
+    ...token,
+    raw: token.raw.replace(QUOTE_REGEXP, ''),
+    text: token.text.replace(QUOTE_REGEXP, ''),
+    tokens: token.tokens?.map?.(token => cleanTokens(token)),
+  };
+}
+
 function createProcessedFirstLine(firstLine) {
   const [patternToken, firstToken, ...remainingTokens] = firstLine.tokens;
   
   return {
     ...firstLine,
     tokens: [
-      {
-        ...patternToken,
-        raw: patternToken.raw.replace(QUOTE_REGEXP, ''),
-        text: patternToken.text.replace(QUOTE_REGEXP, ''),
-        tokens: patternToken.tokens?.map?.(token => ({
-          ...token,
-          raw: token.raw.replace(QUOTE_REGEXP, ''),
-          text: token.text.replace(QUOTE_REGEXP, ''),
-        })),
-      },
+      cleanTokens(patternToken),
       ...createValidFirstTokens(firstToken),
       ...remainingTokens
     ]
