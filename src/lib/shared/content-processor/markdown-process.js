@@ -101,7 +101,7 @@ const markedProcessorFactory = ({
         mathMl = latex2mml(token.math);
       }
       return `${this.parser.parseInline(
-       token.tokens,
+        token.tokens,
       )}<span class="sr-only">${mathMl}</span><span aria-hidden="true">${mml2svg(
         mathMl,
       )}</span>`;
