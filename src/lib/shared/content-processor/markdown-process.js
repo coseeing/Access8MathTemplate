@@ -41,6 +41,7 @@ const markedProcessorFactory = ({
   latexDelimiter,
   asciimathDelimiter,
   htmlMathDisplay,
+  imageFiles,
 }) => {
   const asciimath2mml = asciimath2mmlFactory({ htmlMathDisplay });
   const latex2mml = latex2mmlFactory({ htmlMathDisplay });
@@ -114,10 +115,30 @@ const markedProcessorFactory = ({
       }
       return token.text.replace(/\n/g, '<br />');
     },
+    
+    // Use Marked's built-in image renderer
+    image(token) {
+      try {
+        if (!imageFiles) {
+          // For HTML render
+          const imageName = token.href.split('/').pop();
+          const imageExt = window.contentConfig.imageFileName?.[imageName] || imageName;
+          return `<img src="./images/${imageExt}" alt="${token.text}">`;
+        }
+        // For editor preview
+        const imageFile = imageFiles[token.href];
+        if (!imageFile) return `<img src="${token.href}" alt="${token.text}">`;
+        const blobUrl = URL.createObjectURL(imageFile);
+        return `<img src="${blobUrl}" alt="${token.text}">`;
+      } catch (error) {
+        console.error('Error processing image:', error);
+        return `<img src="${token.href}" alt="${token.text}">`;
+      }
+    }
   };
 
   const marked = new Marked();
-
+  
   marked.use({
     extensions: [math],
     renderer,
@@ -127,9 +148,7 @@ const markedProcessorFactory = ({
 
   marked.use(markedInternalLink());
 
-  return (raw) => {
-    return marked.parse(raw);
-  };
+  return (raw) => marked.parse(raw);
 };
 
 module.exports = markedProcessorFactory;
