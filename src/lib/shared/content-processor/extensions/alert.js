@@ -25,6 +25,7 @@ const ALERT_VARIANTS = [
 ];
 
 const CLASS_NAME = 'markdown-alert';
+const LINK_COLOR = "text-[#58B2DC]"
 
 /**
  * Returns regex pattern to match alert syntax.
@@ -46,26 +47,22 @@ function findMatchingVariant(token) {
   );
 }
 
-function createAlertConfig(matchedVariant) {
-  const { type: variantType, icon } = matchedVariant;
-  return {
-    type: 'alert',
-    meta: {
-      className: CLASS_NAME,
-      variant: variantType,
-      icon,
-      title: matchedVariant.title || ucfirst(variantType),
-      titleClassName: `${CLASS_NAME}-title`,
-    }
-  };
+function extractLinkId(token) {
+  const alertTypes = ALERT_VARIANTS.map(v => v.type.toUpperCase()).join('|');
+  const regexp = new RegExp(`^\\[!(${alertTypes})\\]#([^\\s]+)\n`);
+  const match = token.text.match(regexp);
+  return match ? match[2] : null;
 }
 
-function createCleanedPatternToken(token, regexp) {
+function createCleanedPatternToken(token) {
+  const alertTypes = ALERT_VARIANTS.map(v => v.type.toUpperCase()).join('|');
+  const combinedRegexp = new RegExp(`^\\[!(${alertTypes})\\](?:#[^\\s]+)?\\s*?\\n*`);
+  
   return {
     ...token,
-    raw: token.raw.replace(regexp, ''),
-    text: token.text.replace(regexp, ''),
-    tokens: token.tokens?.map?.(token => createCleanedPatternToken(token, regexp)),
+    raw: token.raw.replace(combinedRegexp, ''),
+    text: token.text.replace(combinedRegexp, ''),
+    tokens: token.tokens?.map?.(token => createCleanedPatternToken(token)),
   };
 }
 
@@ -73,13 +70,13 @@ function createValidFirstTokens(token) {
   return token && token.type !== 'br' ? [token] : [];
 }
 
-function createProcessedFirstLine(firstLine, typeRegexp) {
+function createProcessedFirstLine(firstLine) {
   const [patternToken, firstToken, ...remainingTokens] = firstLine.tokens;
   
   return {
     ...firstLine,
     tokens: [
-      createCleanedPatternToken(patternToken, typeRegexp),
+      createCleanedPatternToken(patternToken),
       ...createValidFirstTokens(firstToken),
       ...remainingTokens,
     ]
@@ -97,7 +94,7 @@ function processTokenContent(token, variantType) {
   }
 
   token.tokens = [
-    createProcessedFirstLine(firstLine, typeRegexp),
+    createProcessedFirstLine(firstLine),
     ...remainingLines
   ];
 }
@@ -111,8 +108,17 @@ function markedAlert() {
       const matchedVariant = findMatchingVariant(token);
       if (!matchedVariant) return;
 
-      const alertConfig = createAlertConfig(matchedVariant);
-      Object.assign(token, alertConfig);
+      Object.assign(token, {
+        type: 'alert',
+        meta: {
+          className: CLASS_NAME,
+          variant: matchedVariant.type,
+          icon: matchedVariant.icon,
+          title: matchedVariant.title || ucfirst(matchedVariant.type),
+          titleClassName: `${CLASS_NAME}-title`,
+          internalLinkId: extractLinkId(token),
+        }
+      });
 
       if (!Array.isArray(token.tokens)) return;
 
@@ -153,6 +159,7 @@ function markedAlert() {
                 ${meta.title}
               </p>
               ${this.parser.parse(tokens)}
+              ${meta.internalLinkId ? `<a href="#${meta.internalLinkId}-source" class="underline ${LINK_COLOR}">返回</a>` : ''}
             </div>
           `;
         },
