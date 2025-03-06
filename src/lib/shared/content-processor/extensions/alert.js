@@ -150,6 +150,7 @@ function markedAlert() {
               class="px-4 py-2 mb-4 border-l-4 ${borderColorMap[meta.variant]}"
               role="region"
               aria-label="${meta.title}"
+              ${meta.internalLinkId ? `id="${meta.internalLinkId}"` : ''}
             >
               <p class="flex items-center font-medium leading-none ${colorMap[meta.variant]}">
                 ${meta.icon.replace(
