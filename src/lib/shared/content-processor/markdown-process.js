@@ -108,6 +108,9 @@ const markedProcessorFactory = ({
       )}</span>`;
     },
   };
+
+  const blobUrlCache = new Map();
+
   const renderer = {
     text(token) {
       if (token.tokens?.length > 0) {
@@ -121,15 +124,19 @@ const markedProcessorFactory = ({
       try {
         if (!imageFiles) {
           // For HTML render
-          const imageName = token.href.split('/').pop();
-          const imageExt = window.contentConfig.imageFileName?.[imageName] || imageName;
+          const imageId = token.href.split('/').pop();
+          const imageExt = window.contentConfig.images[imageId];
           return `<img src="./images/${imageExt}" alt="${token.text}">`;
         }
         // For editor preview
         const imageFile = imageFiles[token.href];
-        if (!imageFile) return `<img src="${token.href}" alt="${token.text}">`;
-        const blobUrl = URL.createObjectURL(imageFile);
-        return `<img src="${blobUrl}" alt="${token.text}">`;
+        
+        if (!blobUrlCache.has(token.href)) {
+          const blobUrl = URL.createObjectURL(imageFile);
+          blobUrlCache.set(token.href, blobUrl);
+        }
+        
+        return `<img src="${blobUrlCache.get(token.href)}" alt="${token.text}">`;
       } catch (error) {
         console.error('Error processing image:', error);
         return `<img src="${token.href}" alt="${token.text}">`;
