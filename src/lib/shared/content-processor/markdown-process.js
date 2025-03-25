@@ -109,7 +109,19 @@ const markedProcessorFactory = ({
     },
   };
 
-  const blobUrlCache = new Map();
+  const createBlobUrlManager = () => {
+    const cache = new Map();
+
+    return (href, imageFile) => {
+      if (!cache.has(href)) {
+        const blobUrl = URL.createObjectURL(imageFile);
+        cache.set(href, blobUrl);
+      }
+      return cache.get(href);
+    };
+  };
+
+  const blobUrlManager = createBlobUrlManager();
 
   const renderer = {
     text(token) {
@@ -130,13 +142,8 @@ const markedProcessorFactory = ({
         }
         // For editor preview
         const imageFile = imageFiles[token.href];
-        
-        if (!blobUrlCache.has(token.href)) {
-          const blobUrl = URL.createObjectURL(imageFile);
-          blobUrlCache.set(token.href, blobUrl);
-        }
-        
-        return `<img src="${blobUrlCache.get(token.href)}" alt="${token.text}">`;
+        const blobUrl = blobUrlManager(token.href, imageFile);
+        return `<img src="${blobUrl}" alt="${token.text}">`;
       } catch (error) {
         console.error('Error processing image:', error);
         return `<img src="${token.href}" alt="${token.text}">`;
