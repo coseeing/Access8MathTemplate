@@ -37,6 +37,19 @@ const AsciiMath_delimiter_dict = {
   },
 };
 
+const createBlobUrlManager = () => {
+  const cache = new Map();
+
+  return (href, imageFile) => {
+    if (cache.has(href)) {
+      return cache.get(href);
+    }
+    const blobUrl = URL.createObjectURL(imageFile);
+    cache.set(href, blobUrl);
+    return blobUrl;
+  };
+};
+
 const markedProcessorFactory = ({
   latexDelimiter,
   asciimathDelimiter,
@@ -107,18 +120,6 @@ const markedProcessorFactory = ({
         mathMl,
       )}</span>`;
     },
-  };
-
-  const createBlobUrlManager = () => {
-    const cache = new Map();
-
-    return (href, imageFile) => {
-      if (!cache.has(href)) {
-        const blobUrl = URL.createObjectURL(imageFile);
-        cache.set(href, blobUrl);
-      }
-      return cache.get(href);
-    };
   };
 
   const blobUrlManager = createBlobUrlManager();
