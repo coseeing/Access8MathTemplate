@@ -37,6 +37,19 @@ const AsciiMath_delimiter_dict = {
   },
 };
 
+const createBlobUrlManager = () => {
+  const cache = new Map();
+
+  return (href, imageFile) => {
+    if (cache.has(href)) {
+      return cache.get(href);
+    }
+    const blobUrl = URL.createObjectURL(imageFile);
+    cache.set(href, blobUrl);
+    return blobUrl;
+  };
+};
+
 const markedProcessorFactory = ({
   latexDelimiter,
   asciimathDelimiter,
@@ -108,6 +121,9 @@ const markedProcessorFactory = ({
       )}</span>`;
     },
   };
+
+  const blobUrlManager = createBlobUrlManager();
+
   const renderer = {
     text(token) {
       if (token.tokens?.length > 0) {
@@ -121,14 +137,13 @@ const markedProcessorFactory = ({
       try {
         if (!imageFiles) {
           // For HTML render
-          const imageName = token.href.split('/').pop();
-          const imageExt = window.contentConfig.imageFileName?.[imageName] || imageName;
+          const imageId = token.href.split('/').pop();
+          const imageExt = window.contentConfig.images[imageId];
           return `<img src="./images/${imageExt}" alt="${token.text}">`;
         }
         // For editor preview
         const imageFile = imageFiles[token.href];
-        if (!imageFile) return `<img src="${token.href}" alt="${token.text}">`;
-        const blobUrl = URL.createObjectURL(imageFile);
+        const blobUrl = blobUrlManager(token.href, imageFile);
         return `<img src="${blobUrl}" alt="${token.text}">`;
       } catch (error) {
         console.error('Error processing image:', error);
