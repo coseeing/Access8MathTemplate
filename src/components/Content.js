@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import {
   textProcessorFactory,
   markedProcessorFactory,
-} from '@/lib/shared/index';
+} from '@coseeing/see-mark';
 
 import linkHandler, { useBindModalLinkEffect } from '@/lib/link';
 import { useConfigContext } from '@/lib/context/config';
