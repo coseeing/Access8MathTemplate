@@ -3,7 +3,7 @@
   "version": "1.3.1",
   "homepage": "./",
   "dependencies": {
-    "@coseeing/see-mark": "^0.0.2"
+    "@coseeing/see-mark": "^1.0.1-rc.13"
   },
   "scripts": {
     "start": "craco start",
