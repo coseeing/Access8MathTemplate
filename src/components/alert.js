@@ -1,4 +1,4 @@
-import { escapeHtml, escapeAttr } from '@coseeing/see-mark/html/utils';
+import { escapeHtml, escapeAttr } from '@coseeing/see-mark/html';
 
 // Octicon SVGs keep the `octicon` class so index.css's
 // `[data-remove-styles] svg:not(.octicon) { all: revert }` does not strip them.

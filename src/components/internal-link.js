@@ -1,4 +1,4 @@
-import { escapeHtml, escapeAttr } from '@coseeing/see-mark/html/utils';
+import { escapeHtml, escapeAttr } from '@coseeing/see-mark/html';
 
 // Adds the template's blue link color on top of the default internal-link
 // markup. Uses the see-mark 1.11 payload keys (display/target); the previous
