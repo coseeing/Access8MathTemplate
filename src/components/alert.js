@@ -28,8 +28,7 @@ const borderColorMap = {
   important: 'border-[#8250df]',
 };
 
-// Port of the React Alert custom component to a (props, childrenHtml) => string
-// function. childrenHtml is already-rendered, sanitized HTML from the adapter.
+// childrenHtml is already-rendered, sanitized HTML from the adapter.
 const alert = (
   { internalLinkId = '', variant = '', title = '' },
   childrenHtml = ''
@@ -38,8 +37,7 @@ const alert = (
   const border = borderColorMap[variant] || '';
   const color = colorMap[variant] || '';
   const idAttr = internalLinkId ? ` id="${escapeAttr(internalLinkId)}"` : '';
-  // href intentionally omits the leading "#" to match the original React
-  // component's behavior (pre-existing; preserved during the rewrite).
+  // href intentionally omits the leading "#".
   const backlink = internalLinkId
     ? `<a href="${escapeAttr(internalLinkId)}-source" class="underline ${LINK_COLOR}">返回</a>`
     : '';

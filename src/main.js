@@ -19,12 +19,10 @@ const config = window.contentConfig;
 if (!config) {
   appEl.textContent = 'Something wrong';
 } else {
-  // Helmet replacement.
   document.title = config.title;
   setMeta('description', config.title);
   setMeta('keywords', config.title);
 
-  // Theme (was App.js useEffect).
   document.body.className =
     config.documentColor === 'dark' ? 'dark-theme' : 'light-theme';
 
@@ -39,10 +37,10 @@ if (!config) {
       components: { alert, internalLink },
     });
 
-    // Wrapper structure mirrors the old React Content.js:
-    // .markdown > [data-remove-styles] > div. The HTML is sanitized by the
-    // adapter (escaped text, on* stripped, javascript: URLs neutralized,
-    // <script>/<style> dropped), so assigning it to innerHTML is safe here.
+    // index.css targets the .markdown > [data-remove-styles] wrapper. The
+    // HTML is sanitized by the adapter (escaped text, on* stripped,
+    // javascript: URLs neutralized, <script>/<style> dropped), so assigning
+    // it to innerHTML is safe here.
     appEl.innerHTML = `<div class="markdown"><div data-remove-styles><div>${html}</div></div></div>`;
   } catch (error) {
     appEl.textContent = `Render error: ${error && error.message}`;
