@@ -23,13 +23,11 @@ export const root = path.resolve(
 );
 export const out = path.join(root, 'build');
 
-// Recreate a clean build/ directory.
 export const clean = async () => {
   await rm(out, { recursive: true, force: true });
   await mkdir(out, { recursive: true });
 };
 
-// Compile Tailwind/PostCSS → build/static/css/main.css.
 export const buildCss = async () => {
   const css = await readFile(path.join(root, 'src/index.css'), 'utf8');
   const result = await postcss([tailwindcss, autoprefixer]).process(css, {
@@ -40,14 +38,11 @@ export const buildCss = async () => {
   await writeFile(path.join(out, 'static/css/main.css'), result.css);
 };
 
-// Verbatim copy of public/ to build root (index.html, content-config.js
-// placeholder, images/, manifest.json, ...).
 export const copyPublic = async () => {
   await cp(path.join(root, 'public'), out, { recursive: true });
 };
 
-// esbuild options shared by build (minify) and dev (watch). mathjax-full's
-// asciimath legacy references the Node `global`, hence the define shim.
+// mathjax-full's asciimath legacy references the Node `global`, hence the define shim.
 export const esbuildOptions = ({ minify = false } = {}) => ({
   entryPoints: [path.join(root, 'src/main.js')],
   bundle: true,

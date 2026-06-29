@@ -1,5 +1,3 @@
-// Build script for the exported-website template. See ./pipeline.mjs for the
-// esbuild-over-Rollup rationale and the CRA-compatible output layout.
 import * as esbuild from 'esbuild';
 
 import { buildCss, clean, copyPublic, esbuildOptions } from './pipeline.mjs';

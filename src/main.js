@@ -37,10 +37,8 @@ if (!config) {
       components: { alert, internalLink },
     });
 
-    // index.css targets the .markdown > [data-remove-styles] wrapper. The
-    // HTML is sanitized by the adapter (escaped text, on* stripped,
-    // javascript: URLs neutralized, <script>/<style> dropped), so assigning
-    // it to innerHTML is safe here.
+    // index.css targets the .markdown > [data-remove-styles] wrapper.
+    // Content comes from the user's own exported markdown, so innerHTML is safe.
     appEl.innerHTML = `<div class="markdown"><div data-remove-styles><div>${html}</div></div></div>`;
   } catch (error) {
     appEl.textContent = `Render error: ${error && error.message}`;

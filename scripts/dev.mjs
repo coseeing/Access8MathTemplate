@@ -1,6 +1,3 @@
-// Dev server: builds CSS + copies public once, then runs esbuild in watch mode
-// and serves build/. Shares the production pipeline (./pipeline.mjs) so dev and
-// prod behave identically.
 import * as esbuild from 'esbuild';
 
 import {

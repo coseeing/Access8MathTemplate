@@ -28,7 +28,6 @@ const borderColorMap = {
   important: 'border-[#8250df]',
 };
 
-// childrenHtml is already-rendered, sanitized HTML from the adapter.
 const alert = (
   { internalLinkId = '', variant = '', title = '' },
   childrenHtml = ''
